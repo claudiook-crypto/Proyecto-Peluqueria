@@ -14,6 +14,7 @@ require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const logger = require("./middlewares/logger");
 const { manejadorErrores, rutaNoEncontrada } = require("./middlewares/errores");
 const turnosRoutes = require("./routes/turnos.routes");
+const tableroRoutes = require("./routes/tablero.routes");
 
 const app = express();
 
@@ -24,8 +25,9 @@ app.use(logger);
 // Archivos estáticos del front (carpeta hermana)
 app.use(express.static(path.join(__dirname, "../../front")));
 
-// Rutas de la API
+// Rutas de la API (Maxi: Reservas y catálogo / Claudio: Tablero y gestión)
 app.use("/api/turnos", turnosRoutes);
+app.use("/api/tablero", tableroRoutes);
 
 app.use(rutaNoEncontrada);
 app.use(manejadorErrores);
