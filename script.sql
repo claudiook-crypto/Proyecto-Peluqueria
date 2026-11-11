@@ -492,6 +492,96 @@ GO
 /* ================================================== */
 /* 6. SPs DE ESTADÍSTICAS         (Dueño: Nahuel)     */
 /* ================================================== */
--- Sección reservada para Stored Procedures de Estadísticas y KPIs (Dueño: Nahuel)
--- Próximos SPs: usp_EstadisticasMensuales, usp_ServiciosMasPedidos, usp_RendimientoEmpleados
+
+-- 6.1 Resumen general de KPIs ejecutivos del salón
+CREATE OR ALTER PROCEDURE dbo.usp_ObtenerEstadisticasGenerales
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        COUNT(T.IdTurno) AS TotalTurnosHistoricos,
+        SUM(CASE WHEN T.Estado = N'Completado' THEN 1 ELSE 0 END) AS TurnosCompletados,
+        SUM(CASE WHEN T.Estado = N'Pendiente' THEN 1 ELSE 0 END) AS TurnosPendientes,
+        SUM(CASE WHEN T.Estado = N'En Atención' THEN 1 ELSE 0 END) AS TurnosEnAtencion,
+        SUM(CASE WHEN T.Estado = N'Cancelado' THEN 1 ELSE 0 END) AS TurnosCancelados,
+        ISNULL(SUM(CASE WHEN T.Estado = N'Completado' THEN T.Total ELSE 0 END), 0.00) AS FacturacionTotal,
+        COUNT(DISTINCT T.IdCliente) AS ClientesAtendidos,
+        ISNULL(AVG(CASE WHEN T.Estado = N'Completado' THEN T.Total ELSE NULL END), 0.00) AS TicketPromedio,
+        CASE 
+            WHEN COUNT(T.IdTurno) > 0 
+            THEN ROUND((CAST(SUM(CASE WHEN T.Estado = N'Completado' THEN 1 ELSE 0 END) AS DECIMAL(5,2)) * 100.0) / COUNT(T.IdTurno), 2)
+            ELSE 0.00 
+        END AS TasaEfectividad
+    FROM dbo.Turnos AS T;
+END;
+GO
+
+-- 6.2 Consulta agregada de servicios más demandados con ranking y recaudación
+CREATE OR ALTER PROCEDURE dbo.usp_ServiciosMasDemandados
+    @FechaDesde DATE = NULL,
+    @FechaHasta DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        S.IdServicio,
+        S.Nombre AS Servicio,
+        S.Precio AS PrecioActual,
+        COUNT(DT.IdDetalle) AS CantidadSolicitada,
+        ISNULL(SUM(DT.PrecioUnitario), 0.00) AS RecaudacionTotal,
+        S.DuracionMin
+    FROM dbo.Servicios AS S
+    INNER JOIN dbo.DetalleTurno AS DT 
+        ON DT.IdServicio = S.IdServicio
+    INNER JOIN dbo.Turnos AS T 
+        ON T.IdTurno = DT.IdTurno
+    WHERE (@FechaDesde IS NULL OR T.Fecha >= @FechaDesde)
+      AND (@FechaHasta IS NULL OR T.Fecha <= @FechaHasta)
+      AND T.Estado <> N'Cancelado'
+    GROUP BY
+        S.IdServicio,
+        S.Nombre,
+        S.Precio,
+        S.DuracionMin
+    ORDER BY
+        CantidadSolicitada DESC,
+        RecaudacionTotal DESC;
+END;
+GO
+
+-- 6.3 Consulta agregada de rendimiento y facturación por profesional
+CREATE OR ALTER PROCEDURE dbo.usp_RendimientoEmpleados
+    @FechaDesde DATE = NULL,
+    @FechaHasta DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        E.IdEmpleado,
+        E.Nombre + N' ' + E.Apellido AS Profesional,
+        COUNT(DISTINCT T.IdTurno) AS TurnosAtendidos,
+        COUNT(DT.IdDetalle) AS ServiciosRealizados,
+        ISNULL(SUM(DT.PrecioUnitario), 0.00) AS TotalFacturado,
+        ISNULL(ROUND(AVG(DT.PrecioUnitario), 2), 0.00) AS PromedioPorServicio,
+        E.Activo
+    FROM dbo.Empleados AS E
+    INNER JOIN dbo.DetalleTurno AS DT 
+        ON DT.IdEmpleado = E.IdEmpleado
+    INNER JOIN dbo.Turnos AS T 
+        ON T.IdTurno = DT.IdTurno
+    WHERE (@FechaDesde IS NULL OR T.Fecha >= @FechaDesde)
+      AND (@FechaHasta IS NULL OR T.Fecha <= @FechaHasta)
+      AND T.Estado = N'Completado'
+    GROUP BY
+        E.IdEmpleado,
+        E.Nombre,
+        E.Apellido,
+        E.Activo
+    ORDER BY
+        TotalFacturado DESC,
+        TurnosAtendidos DESC;
+END;
 GO
