@@ -73,3 +73,34 @@ export function actualizarEstadoTurno(idTurno, nuevoEstado) {
         body: JSON.stringify({ nuevoEstado })
     });
 }
+
+// ------------------------------------------------------------
+// 3. Métodos de Estadísticas y Reportes (Dueño: Nahuel)
+// ------------------------------------------------------------
+
+// Resumen general de KPIs ejecutivos del salón
+export function obtenerEstadisticasGenerales() {
+    return pedirJson(`${API_URL}/estadisticas/generales`);
+}
+
+// Ranking de servicios más solicitados y recaudación
+export function obtenerServiciosMasDemandados(filtros = {}) {
+    const params = new URLSearchParams();
+    if (filtros.fechaDesde) params.append("fechaDesde", filtros.fechaDesde);
+    if (filtros.fechaHasta) params.append("fechaHasta", filtros.fechaHasta);
+
+    const queryString = params.toString();
+    const url = queryString ? `${API_URL}/estadisticas/servicios?${queryString}` : `${API_URL}/estadisticas/servicios`;
+    return pedirJson(url);
+}
+
+// Reporte de rendimiento y facturación por profesional
+export function obtenerRendimientoEmpleados(filtros = {}) {
+    const params = new URLSearchParams();
+    if (filtros.fechaDesde) params.append("fechaDesde", filtros.fechaDesde);
+    if (filtros.fechaHasta) params.append("fechaHasta", filtros.fechaHasta);
+
+    const queryString = params.toString();
+    const url = queryString ? `${API_URL}/estadisticas/empleados?${queryString}` : `${API_URL}/estadisticas/empleados`;
+    return pedirJson(url);
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Peluquería & Barbería · Estadísticas & Reportes</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header class="encabezado">
+        <div class="contenedor-barra">
+            <div class="logo">
+                <span class="logo-icono">✂</span>
+                <span class="logo-texto">Estilo & Vanguardia</span>
+            </div>
+            <nav class="navegacion">
+                <a href="index.html" class="nav-link">Reservas</a>
+                <a href="tablero.html" class="nav-link">Tablero de Gestión</a>
+                <a href="estadisticas.html" class="nav-link activo">Estadísticas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="contenedor-principal">
+        <div class="intro-seccion">
+            <div class="titulo-con-accion">
+                <div>
+                    <h1>Reportes & Analítica de Negocio</h1>
+                    <p>Consultas agregadas en tiempo real: KPIs financieros, servicios con mayor demanda y rendimiento comercial por estilista.</p>
+                </div>
+                <div class="indicador-reporte">
+                    <span>📊 Reportes Gerenciales</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtro por Rango de Fechas -->
+        <section class="seccion-filtros-estadisticas">
+            <form id="formFiltrosEstadisticas" class="barra-filtros-estadisticas">
+                <div class="grupo-filtro">
+                    <label for="filtroFechaDesde">Fecha Desde</label>
+                    <input type="date" id="filtroFechaDesde" name="fechaDesde">
+                </div>
+
+                <div class="grupo-filtro">
+                    <label for="filtroFechaHasta">Fecha Hasta</label>
+                    <input type="date" id="filtroFechaHasta" name="fechaHasta">
+                </div>
+
+                <div class="grupo-filtro-acciones">
+                    <button type="submit" id="btnFiltrar" class="btn btn-primario">
+                        Filtrar Período
+                    </button>
+                    <button type="button" id="btnLimpiarFiltros" class="btn btn-secundario">
+                        Histórico Completo
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Tarjetas de KPIs Ejecutivos -->
+        <section class="seccion-kpis">
+            <div class="seccion-cabecera-tablero">
+                <h2>Indicadores Clave de Rendimiento (KPIs)</h2>
+                <span id="subtextoPeriodo" class="subtexto-cabecera">Calculado sobre el histórico total del negocio</span>
+            </div>
+
+            <div id="contenedorKpis" class="grilla-kpis">
+                <p class="estado-vacio">Cargando métricas ejecutivas...</p>
+            </div>
+        </section>
+
+        <!-- Sección de Tablas Agregadas con GROUP BY -->
+        <div class="grilla-reportes">
+            <!-- Tabla 1: Ranking de Servicios Más Demandados -->
+            <section class="tarjeta-reporte">
+                <div class="reporte-cabecera">
+                    <div>
+                        <h2>Servicios Más Demandados</h2>
+                        <span class="subtexto-cabecera">Ranking agrupado por volumen de solicitudes y recaudación generada</span>
+                    </div>
+                    <span class="badge-reporte">GROUP BY Servicios</span>
+                </div>
+
+                <div class="tabla-contenedor">
+                    <table class="tabla-estadisticas" id="tablaServicios">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Servicio</th>
+                                <th style="text-align: center;">Duración</th>
+                                <th style="text-align: right;">Solicitudes</th>
+                                <th style="text-align: right;">Recaudación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTablaServicios">
+                            <tr>
+                                <td colspan="5" class="estado-vacio">Cargando ranking de servicios...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tabla 2: Rendimiento y Facturación por Profesional -->
+            <section class="tarjeta-reporte">
+                <div class="reporte-cabecera">
+                    <div>
+                        <h2>Rendimiento por Profesional</h2>
+                        <span class="subtexto-cabecera">Producción, turnos atendidos y promedio de facturación por estilista</span>
+                    </div>
+                    <span class="badge-reporte">GROUP BY Empleados</span>
+                </div>
+
+                <div class="tabla-contenedor">
+                    <table class="tabla-estadisticas" id="tablaEmpleados">
+                        <thead>
+                            <tr>
+                                <th>Profesional</th>
+                                <th style="text-align: right;">Turnos</th>
+                                <th style="text-align: right;">Servicios</th>
+                                <th style="text-align: right;">Promedio/Serv.</th>
+                                <th style="text-align: right;">Total Facturado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTablaEmpleados">
+                            <tr>
+                                <td colspan="5" class="estado-vacio">Cargando producción por profesional...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="pie-pagina">
+        <p>Programación II · Trabajo Final Integrador · Ciclo 2026 · Tecnicatura Superior en Desarrollo de Software</p>
+    </footer>
+
+    <script type="module" src="js/estadisticas.js"></script>
+</body>
+</html>

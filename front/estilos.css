@@ -931,3 +931,236 @@ textarea:focus {
 .toast-flotante.error {
     border-left: 4px solid #ef4444;
 }
+
+
+/* ============================================================
+   ESTILOS ESPECÍFICOS DE ESTADÍSTICAS Y REPORTES (Dueño: Nahuel)
+   ============================================================ */
+
+.indicador-reporte {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--color-acento);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radio-borde);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ================= Filtros por Rango de Fechas ================= */
+.seccion-filtros-estadisticas {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--sombra-tarjeta);
+}
+
+.barra-filtros-estadisticas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1.5rem;
+}
+
+/* ================= Grilla de KPIs Ejecutivos ================= */
+.seccion-kpis {
+    margin-bottom: 2.5rem;
+}
+
+.grilla-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1.25rem;
+}
+
+.tarjeta-kpi-estadistica {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.5rem;
+    box-shadow: var(--sombra-tarjeta);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.tarjeta-kpi-estadistica:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-tarjeta-hover);
+}
+
+.tarjeta-kpi-estadistica::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.kpi-facturacion::before { background-color: var(--color-acento); }
+.kpi-ticket::before { background-color: #38bdf8; }
+.kpi-efectividad::before { background-color: #10b981; }
+.kpi-clientes::before { background-color: #a855f7; }
+.kpi-turnos::before { background-color: #ec4899; }
+
+.kpi-titulo {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.kpi-valor-grande {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--color-texto);
+    line-height: 1.1;
+}
+
+.kpi-subtexto {
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario);
+}
+
+/* ================= Grilla de Reportes y Tablas ================= */
+.grilla-reportes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.tarjeta-reporte {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.5rem;
+    box-shadow: var(--sombra-tarjeta);
+    display: flex;
+    flex-direction: column;
+}
+
+.reporte-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.badge-reporte {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    background-color: var(--color-fondo);
+    color: var(--color-acento);
+    border: 1px solid var(--color-borde);
+    white-space: nowrap;
+}
+
+/* ================= Tablas Legibles y Accesibles ================= */
+.tabla-contenedor {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.tabla-estadisticas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.tabla-estadisticas th {
+    padding: 0.85rem 1rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--color-borde);
+    background-color: var(--color-fondo);
+}
+
+.tabla-estadisticas td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--color-borde);
+    color: var(--color-texto);
+    vertical-align: middle;
+}
+
+.tabla-estadisticas tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.015);
+}
+
+.tabla-estadisticas tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Badges de Podio para Rankings */
+.badge-podio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 0.8rem;
+}
+
+.podio-1 {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid #f59e0b;
+}
+
+.podio-2 {
+    background-color: rgba(148, 163, 184, 0.2);
+    color: #e2e8f0;
+    border: 1px solid #94a3b8;
+}
+
+.podio-3 {
+    background-color: rgba(180, 83, 9, 0.2);
+    color: #f97316;
+    border: 1px solid #d97706;
+}
+
+.podio-resto {
+    background-color: var(--color-fondo);
+    color: var(--color-texto-secundario);
+    border: 1px solid var(--color-borde);
+}
+
+.nombre-item-tabla {
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+.recaudacion-celda {
+    font-weight: 700;
+    color: var(--color-acento);
+}
+
+.duracion-badge-tabla {
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario);
+}
