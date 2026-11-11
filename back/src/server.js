@@ -13,6 +13,7 @@ require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 const logger = require("./middlewares/logger");
 const { manejadorErrores, rutaNoEncontrada } = require("./middlewares/errores");
+const turnosRoutes = require("./routes/turnos.routes");
 
 const app = express();
 
@@ -23,9 +24,8 @@ app.use(logger);
 // Archivos estáticos del front (carpeta hermana)
 app.use(express.static(path.join(__dirname, "../../front")));
 
-// Rutas de la API (se incorporan en el próximo commit)
-// const turnosRoutes = require("./routes/turnos.routes");
-// app.use("/api/turnos", turnosRoutes);
+// Rutas de la API
+app.use("/api/turnos", turnosRoutes);
 
 app.use(rutaNoEncontrada);
 app.use(manejadorErrores);
