@@ -1,0 +1,463 @@
+/* ============================================================
+   ESTILOS GENERALES Y MODULARES - SISTEMA DE PELUQUERÍA
+   Programación II · Trabajo Final Integrador · Ciclo 2026
+   CSS Vanilla puro - Sin frameworks externos
+   ============================================================ */
+
+:root {
+    --color-fondo: #0f172a;
+    --color-superficie: #1e293b;
+    --color-tarjeta: #334155;
+    --color-tarjeta-hover: #475569;
+    --color-borde: #334155;
+    --color-borde-foco: #f59e0b;
+    --color-texto: #f8fafc;
+    --color-texto-secundario: #94a3b8;
+    --color-acento: #f59e0b;
+    --color-acento-hover: #d97706;
+    --color-exito-fondo: #064e3b;
+    --color-exito-texto: #6ee7b7;
+    --color-exito-borde: #059669;
+    --color-error-fondo: #7f1d1d;
+    --color-error-texto: #fca5a5;
+    --color-error-borde: #dc2626;
+    --color-seleccionada-fondo: #1e3a5f;
+    --color-seleccionada-borde: #38bdf8;
+    --radio-borde: 8px;
+    --sombra-tarjeta: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --fuente: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= Barra de Navegación ================= */
+.encabezado {
+    background-color: var(--color-superficie);
+    border-bottom: 1px solid var(--color-borde);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.contenedor-barra {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-acento);
+}
+
+.logo-icono {
+    font-size: 1.5rem;
+}
+
+.navegacion {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--color-texto-secundario);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radio-borde);
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--color-texto);
+    background-color: var(--color-tarjeta);
+}
+
+.nav-link.activo {
+    color: var(--color-acento);
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+/* ================= Contenedor Principal ================= */
+.contenedor-principal {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    flex: 1;
+    width: 100%;
+}
+
+.intro-seccion {
+    margin-bottom: 2rem;
+}
+
+.intro-seccion h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.intro-seccion p {
+    color: var(--color-texto-secundario);
+    font-size: 1.05rem;
+}
+
+/* ================= Grilla de Reserva ================= */
+.grilla-reserva {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (max-width: 960px) {
+    .grilla-reserva {
+        grid-template-columns: 1fr;
+    }
+}
+
+.seccion-cabecera {
+    margin-bottom: 1.25rem;
+}
+
+.seccion-cabecera h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.subtexto-cabecera {
+    font-size: 0.875rem;
+    color: var(--color-texto-secundario);
+}
+
+/* ================= Catálogo de Servicios ================= */
+.grilla-servicios {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+}
+
+.tarjeta-servicio {
+    background-color: var(--color-superficie);
+    border: 2px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    user-select: none;
+}
+
+.tarjeta-servicio:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-tarjeta-hover);
+    background-color: #243248;
+}
+
+.tarjeta-servicio.seleccionada {
+    border-color: var(--color-seleccionada-borde);
+    background-color: var(--color-seleccionada-fondo);
+    box-shadow: 0 0 0 1px var(--color-seleccionada-borde);
+}
+
+.tarjeta-servicio-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tarjeta-servicio-titulo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+.tarjeta-servicio-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--color-texto-secundario);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: transparent;
+    transition: all 0.2s;
+}
+
+.tarjeta-servicio.seleccionada .tarjeta-servicio-check {
+    background-color: var(--color-seleccionada-borde);
+    border-color: var(--color-seleccionada-borde);
+    color: #0f172a;
+    font-weight: bold;
+}
+
+.tarjeta-servicio-descripcion {
+    font-size: 0.875rem;
+    color: var(--color-texto-secundario);
+    margin-bottom: 1rem;
+    flex: 1;
+}
+
+.tarjeta-servicio-pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.75rem;
+}
+
+.tarjeta-servicio-precio {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-acento);
+}
+
+.tarjeta-servicio-duracion {
+    font-size: 0.8rem;
+    color: var(--color-texto-secundario);
+    background-color: var(--color-fondo);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* ================= Panel Lateral: Resumen en Vivo ================= */
+.tarjeta-resumen-fija {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.5rem;
+    box-shadow: var(--sombra-tarjeta);
+    position: sticky;
+    top: 5rem;
+}
+
+.resumen-vacio {
+    padding: 1.5rem 1rem;
+    text-align: center;
+    background-color: var(--color-fondo);
+    border: 1px dashed var(--color-borde);
+    border-radius: var(--radio-borde);
+    color: var(--color-texto-secundario);
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.resumen-lista {
+    list-style: none;
+    margin-bottom: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.resumen-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.9rem;
+}
+
+.resumen-item-quitar {
+    background: none;
+    border: none;
+    color: var(--color-texto-secundario);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 0.25rem;
+    margin-left: 0.5rem;
+    transition: color 0.2s;
+}
+
+.resumen-item-quitar:hover {
+    color: var(--color-error-texto);
+}
+
+.resumen-total-bloque {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-top: 2px solid var(--color-borde);
+    margin-bottom: 1.25rem;
+}
+
+.resumen-total-etiqueta {
+    font-weight: 600;
+    color: var(--color-texto-secundario);
+}
+
+.resumen-total-monto {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-acento);
+}
+
+/* ================= Formulario ================= */
+.formulario-turno {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.grupo-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.grupo-campo label {
+    font-size: 0.825rem;
+    font-weight: 500;
+    color: var(--color-texto-secundario);
+}
+
+.fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    color: var(--color-texto);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-borde-foco);
+}
+
+/* ================= Botones ================= */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radio-borde);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    user-select: none;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primario {
+    background-color: var(--color-acento);
+    color: #0f172a;
+}
+
+.btn-primario:hover {
+    background-color: var(--color-acento-hover);
+}
+
+.btn-bloque {
+    width: 100%;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ================= Mensajes de Alerta ================= */
+.mensaje-alerta {
+    padding: 0.85rem 1rem;
+    border-radius: var(--radio-borde);
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mensaje-alerta.exito {
+    background-color: var(--color-exito-fondo);
+    color: var(--color-exito-texto);
+    border: 1px solid var(--color-exito-borde);
+    font-weight: 500;
+}
+
+.mensaje-alerta.error {
+    background-color: var(--color-error-fondo);
+    color: var(--color-error-texto);
+    border: 1px solid var(--color-error-borde);
+    font-weight: 500;
+}
+
+.oculto {
+    display: none;
+}
+
+/* ================= Pie de Página ================= */
+.pie-pagina {
+    background-color: var(--color-superficie);
+    border-top: 1px solid var(--color-borde);
+    padding: 1.5rem 0;
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: var(--color-texto-secundario);
+    text-align: center;
+}
+
+.pie-pagina .creditos {
+    margin-top: 0.25rem;
+    color: var(--color-acento);
+}
