@@ -23,6 +23,30 @@ El sistema está desarrollado como un **servidor híbrido en Node.js con Express
 
 ---
 
+## 💇 Módulo de Catálogo y Reservas (Maximiliano Cuassolo)
+
+El módulo de Maxi resuelve el **portal de atención al cliente y alta de turnos**, aplicando la regla de oro de la cátedra: el total lo calcula siempre la base de datos con `SUM()`.
+
+### 1. Procedimientos Almacenados (`script.sql` - Sección 4)
+* `dbo.usp_ListarServicios`: Lista el catálogo completo de cortes, peinados y tratamientos capilares ordenados por nombre.
+* `dbo.usp_ListarEmpleados`: Consulta estilistas y barberos activos para asignación.
+* `dbo.usp_CrearTurno`: Transacción maestra con `BEGIN TRANSACTION`, apertura de carrito JSON con `OPENJSON`, validación de campos obligatorios (`THROW 50020`), carrito vacío o inexistente (`THROW 50022`), solapamiento de turno por profesional (`THROW 50024`), cálculo de total con `SUM(S.Precio)` y retorno mediante 2 parámetros `OUTPUT` (`@IdTurno` y `@Total`).
+
+### 2. Endpoints de la API REST (`/api/turnos`)
+| Método | Endpoint | Descripción | Códigos HTTP |
+| :--- | :--- | :--- | :---: |
+| `GET` | `/api/turnos/servicios` | Catálogo de servicios disponibles con precio y duración | `200`, `500` |
+| `GET` | `/api/turnos/empleados` | Profesionales activos para atención | `200`, `500` |
+| `POST` | `/api/turnos` | Alta transaccional de turno con detalle JSON | `201`, `400`, `500` |
+
+### 3. Frontend de Reservas (`front/index.html`)
+* **Catálogo interactivo:** Componente funcional puro `tarjetaServicio.js` con selección/deselección de servicios.
+* **Resumen en vivo:** Componente puro `resumenTurno.js` con cálculo reactivo de total estimado y duración con `reduce()`.
+* **Estado mínimo en memoria:** Gestión limpia mediante `Set` de identificadores sin duplicar datos del catálogo.
+* **Confirmación transaccional:** Conexión con `POST /api/turnos` y feedback inmediato del total liquidado por la base de datos.
+
+---
+
 ## 📋 Módulo de Tablero y Gestión (Claudio Crettini)
 
 El módulo de Claudio resuelve la **operación diaria del salón de peluquería/barbería** mediante un tablero en vivo con métricas, filtros y actualización de turnos:
