@@ -1,10 +1,15 @@
 // ============================================================
 // CONTROLADOR DEL TABLERO DE GESTIÓN (Dueño: Claudio)
 // Programación II · Cátedra Lic. Romina Laura Frandino
-// Orquesta la carga de datos, el filtrado y el renderizado
-// reactivo de turnos mediante componentes funcionales puros.
+// Orquesta la carga de datos, el filtrado, el renderizado
+// reactivo y las transiciones de estado con feedback visual.
 // ============================================================
-import { obtenerTurnosTablero, buscarTurnosTablero, obtenerEmpleados } from "./api.js";
+import {
+    obtenerTurnosTablero,
+    buscarTurnosTablero,
+    obtenerEmpleados,
+    actualizarEstadoTurno
+} from "./api.js";
 import { renderTarjetaTurno } from "./componentes/tarjetaTurno.js";
 
 // Referencias a elementos del DOM
@@ -16,6 +21,7 @@ const filtroEstado = document.getElementById("filtroEstado");
 const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
 const btnRefrescar = document.getElementById("btnRefrescar");
 const contadorResultados = document.getElementById("contadorResultados");
+const toastMensaje = document.getElementById("toastMensaje");
 
 // Métricas del encabezado
 const metricaTotal = document.getElementById("metricaTotal");
@@ -23,8 +29,25 @@ const metricaPendientes = document.getElementById("metricaPendientes");
 const metricaAtencion = document.getElementById("metricaAtencion");
 const metricaCompletados = document.getElementById("metricaCompletados");
 
-// Estado local reactivo en memoria
-let turnosActuales = [];
+// Temporizador para el toast flotante
+let temporizadorToast = null;
+
+/**
+ * Muestra una notificación flotante accesible (Toast).
+ * @param {string} mensaje - Texto descriptivo.
+ * @param {'exito'|'error'} tipo - Variante visual.
+ */
+function mostrarToast(mensaje, tipo = "exito") {
+    if (!toastMensaje) return;
+
+    clearTimeout(temporizadorToast);
+    toastMensaje.textContent = mensaje;
+    toastMensaje.className = `toast-flotante ${tipo}`;
+
+    temporizadorToast = setTimeout(() => {
+        toastMensaje.className = "toast-flotante oculto";
+    }, 3800);
+}
 
 /**
  * Calcula y actualiza en tiempo real los contadores de métricas en pantalla.
@@ -102,7 +125,6 @@ async function consultarTurnos() {
             ? await buscarTurnosTablero({ fecha, idEmpleado, estado })
             : await obtenerTurnosTablero();
 
-        turnosActuales = turnos;
         actualizarMetricas(turnos);
         renderizarTurnos(turnos);
     } catch (error) {
@@ -114,6 +136,44 @@ async function consultarTurnos() {
             </div>
         `;
         contadorResultados.textContent = "Error de sincronización";
+    }
+}
+
+/**
+ * Maneja los clics en los botones de acción contextual de cada tarjeta.
+ * Aplica delegación de eventos en el contenedor de turnos.
+ * @param {Event} e - Evento click del mouse.
+ */
+async function manejarAccionTurno(e) {
+    const btn = e.target.closest(".btn-accion-tablero");
+    if (!btn) return;
+
+    const idTurno = btn.dataset.id;
+    const nuevoEstado = btn.dataset.nuevoEstado;
+
+    if (!idTurno || !nuevoEstado) return;
+
+    // Confirmación rápida si es cancelación
+    if (nuevoEstado === "Cancelado") {
+        const confirma = window.confirm(`¿Estás seguro de cancelar el Turno #${idTurno}?`);
+        if (!confirma) return;
+    }
+
+    // Deshabilitar temporalmente el botón para prevenir doble clic
+    btn.disabled = true;
+    const textoOriginal = btn.textContent;
+    btn.textContent = "Actualizando...";
+
+    try {
+        const respuesta = await actualizarEstadoTurno(idTurno, nuevoEstado);
+        mostrarToast(respuesta.mensaje || `Turno #${idTurno} pasado a '${nuevoEstado}'.`, "exito");
+        // Refrescar el tablero respetando los filtros actuales
+        await consultarTurnos();
+    } catch (error) {
+        console.error("Error al actualizar estado del turno:", error);
+        mostrarToast(error.message, "error");
+        btn.disabled = false;
+        btn.textContent = textoOriginal;
     }
 }
 
@@ -146,4 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnRefrescar.style.transform = "";
         }, 400);
     });
+
+    // 6. Delegación de eventos para botones de acción de turnos (Commit 5)
+    contenedorTurnos.addEventListener("click", manejarAccionTurno);
 });
