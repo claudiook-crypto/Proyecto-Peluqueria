@@ -1,8 +1,8 @@
 // ============================================================
 // CONTROLADOR DE ESTADÍSTICAS & REPORTES (Dueño: Nahuel)
 // Programación II · Cátedra Lic. Romina Laura Frandino
-// Orquesta la consulta de analítica agregada y el renderizado
-// reactivo de tablas y KPIs mediante componentes funcionales puros.
+// Orquesta la consulta de analítica agregada, el filtrado
+// por rango de fechas y el renderizado reactivo de tablas y KPIs.
 // ============================================================
 import {
     obtenerEstadisticasGenerales,
@@ -12,13 +12,17 @@ import {
 import { renderTarjetaKpi } from "./componentes/tarjetaKpi.js";
 import { renderFilaServicio } from "./componentes/filaServicio.js";
 import { renderFilaEmpleado } from "./componentes/filaEmpleado.js";
-import { formatearMoneda } from "./utils/formato.js";
+import { formatearMoneda, formatearFecha } from "./utils/formato.js";
 
-// Referencias a contenedores del DOM
+// Referencias a contenedores y controles del DOM
 const contenedorKpis = document.getElementById("contenedorKpis");
 const cuerpoTablaServicios = document.getElementById("cuerpoTablaServicios");
 const cuerpoTablaEmpleados = document.getElementById("cuerpoTablaEmpleados");
 const subtextoPeriodo = document.getElementById("subtextoPeriodo");
+const formFiltros = document.getElementById("formFiltrosEstadisticas");
+const filtroFechaDesde = document.getElementById("filtroFechaDesde");
+const filtroFechaHasta = document.getElementById("filtroFechaHasta");
+const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
 
 /**
  * Carga y renderiza las tarjetas de KPIs ejecutivos globales.
@@ -139,15 +143,69 @@ export async function cargarRendimientoEmpleados(filtros = {}) {
 }
 
 /**
- * Inicialización al cargar la página: Ejecuta las 3 consultas agregadas en paralelo.
+ * Aplica los filtros por rango de fechas ingresados por el usuario.
+ * @param {Event} e - Evento de envío del formulario.
+ */
+async function manejarFiltradoPorFecha(e) {
+    if (e) e.preventDefault();
+
+    const fechaDesde = filtroFechaDesde.value;
+    const fechaHasta = filtroFechaHasta.value;
+
+    if (fechaDesde && fechaHasta && fechaDesde > fechaHasta) {
+        alert("La fecha de inicio no puede ser posterior a la fecha final.");
+        return;
+    }
+
+    // Actualizar leyenda del período
+    if (fechaDesde || fechaHasta) {
+        const textoDesde = fechaDesde ? formatearFecha(fechaDesde) : "inicio histórico";
+        const textoHasta = fechaHasta ? formatearFecha(fechaHasta) : "actualidad";
+        subtextoPeriodo.textContent = `Filtrado por período: ${textoDesde} al ${textoHasta}`;
+    } else {
+        subtextoPeriodo.textContent = "Calculado sobre el histórico total del negocio";
+    }
+
+    const filtros = {
+        fechaDesde: fechaDesde || null,
+        fechaHasta: fechaHasta || null
+    };
+
+    // Refrescar ambas tablas agregadas con el rango aplicado
+    await Promise.all([
+        cargarRankingServicios(filtros),
+        cargarRendimientoEmpleados(filtros)
+    ]);
+}
+
+/**
+ * Restablece los filtros al histórico completo.
+ */
+async function restablecerFiltros() {
+    formFiltros.reset();
+    subtextoPeriodo.textContent = "Calculado sobre el histórico total del negocio";
+
+    await Promise.all([
+        cargarRankingServicios(),
+        cargarRendimientoEmpleados()
+    ]);
+}
+
+/**
+ * Inicialización al cargar la página: Ejecuta las consultas iniciales y suscribe eventos.
  */
 document.addEventListener("DOMContentLoaded", async () => {
     try {
+        // Carga inicial en paralelo de los tres reportes
         await Promise.all([
             cargarKpis(),
             cargarRankingServicios(),
             cargarRendimientoEmpleados()
         ]);
+
+        // Eventos de filtrado por rango de fechas (Commit 5)
+        formFiltros.addEventListener("submit", manejarFiltradoPorFecha);
+        btnLimpiarFiltros.addEventListener("click", restablecerFiltros);
     } catch (error) {
         console.error("Error en la carga inicial de estadísticas:", error);
     }

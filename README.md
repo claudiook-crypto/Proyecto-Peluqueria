@@ -9,7 +9,7 @@ Docente: Lic. Romina Laura Frandino
 ## 👥 Integrantes del Equipo
 * **Maximiliano Cuassolo** (`rama-maxi`): Módulo de Reservas y Catálogo del Cliente.
 * **Claudio Crettini** (`rama-claudio`): Módulo de Tablero Operativo y Gestión de Turnos.
-* **Nahuel Busto** (`rama-nahuel`): Módulo de Estadísticas y Reportes.
+* **Nahuel Busto** (`rama-nahuel`): Módulo de Estadísticas y Analítica de Negocio.
 
 ---
 
@@ -66,6 +66,29 @@ El módulo de Claudio resuelve la **operación diaria del salón de peluquería/
 
 ---
 
+## 📊 Módulo de Estadísticas y Analítica (Nahuel Busto)
+
+El módulo de Nahuel resuelve los **reportes gerenciales e indicadores clave del negocio (KPIs)** exigidos por la cátedra mediante consultas agregadas:
+
+### 1. Procedimientos Almacenados (`script.sql` - Sección 6)
+* `dbo.usp_ObtenerEstadisticasGenerales`: Resumen global de KPIs (facturación real de completados, ticket promedio, turnos por estado, clientes únicos y tasa de efectividad).
+* `dbo.usp_ServiciosMasDemandados`: Consulta agregada con `GROUP BY` sobre servicios, cantidad solicitada (`COUNT`), recaudación total (`SUM`) y soporte de rango de fechas (`@FechaDesde`, `@FechaHasta`).
+* `dbo.usp_RendimientoEmpleados`: Consulta agregada con `GROUP BY` sobre estilistas, con turnos atendidos, servicios realizados y recaudación total generada por cada profesional.
+
+### 2. Endpoints de la API REST (`/api/estadisticas`)
+| Método | Endpoint | Descripción | Códigos HTTP |
+| :--- | :--- | :--- | :---: |
+| `GET` | `/api/estadisticas/generales` | Retorna los KPIs históricos y globales del salón | `200`, `500` |
+| `GET` | `/api/estadisticas/servicios` | Ranking de servicios más pedidos con filtro de fechas | `200`, `400`, `500` |
+| `GET` | `/api/estadisticas/empleados` | Reporte de rendimiento y facturación por profesional | `200`, `400`, `500` |
+
+### 3. Frontend de Estadísticas (`front/estadisticas.html`)
+* **Tarjetas de KPIs ejecutivos:** Componente puro `tarjetaKpi.js` para visualización de Facturación Real, Ticket Promedio, Tasa de Cumplimiento y Clientes Atendidos.
+* **Tablas de consultas agregadas:** Componentes puros `filaServicio.js` y `filaEmpleado.js` con filas cebra, ranking con medallas de podio (🥇, 🥈, 🥉) e importes formateados en pesos argentinos.
+* **Filtrado por rango de fechas:** Permite auditar la producción por semana o mes con validación de coherencia cronológica y refresco dinámico sin recargar la página.
+
+---
+
 ## 🛠️ Instrucciones de Puesta en Marcha
 
 1. **Base de Datos:**
@@ -80,3 +103,4 @@ El módulo de Claudio resuelve la **operación diaria del salón de peluquería/
    ```
    * Acceder a la interfaz de reservas: `http://localhost:3000/index.html`
    * Acceder al tablero de gestión: `http://localhost:3000/tablero.html`
+   * Acceder al panel de estadísticas: `http://localhost:3000/estadisticas.html`
