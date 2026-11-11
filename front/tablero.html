@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Peluquería & Barbería · Tablero de Gestión</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header class="encabezado">
+        <div class="contenedor-barra">
+            <div class="logo">
+                <span class="logo-icono">✂</span>
+                <span class="logo-texto">Estilo & Vanguardia</span>
+            </div>
+            <nav class="navegacion">
+                <a href="index.html" class="nav-link">Reservas</a>
+                <a href="tablero.html" class="nav-link activo">Tablero de Gestión</a>
+                <a href="estadisticas.html" class="nav-link">Estadísticas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="contenedor-principal">
+        <div class="intro-seccion">
+            <div class="titulo-con-accion">
+                <div>
+                    <h1>Tablero Operativo de Gestión</h1>
+                    <p>Monitoreo de turnos en tiempo real, filtros avanzados por profesional y fecha, y control de estados de atención.</p>
+                </div>
+                <div class="indicador-vivo">
+                    <span class="punto-vivo"></span>
+                    <span>En vivo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fila de Métricas Rápidas -->
+        <section class="resumen-metricas">
+            <div class="tarjeta-metrica">
+                <span class="metrica-etiqueta">Total en Tablero</span>
+                <span id="metricaTotal" class="metrica-valor">0</span>
+            </div>
+            <div class="tarjeta-metrica metrica-pendiente">
+                <span class="metrica-etiqueta">Pendientes</span>
+                <span id="metricaPendientes" class="metrica-valor">0</span>
+            </div>
+            <div class="tarjeta-metrica metrica-atencion">
+                <span class="metrica-etiqueta">En Atención</span>
+                <span id="metricaAtencion" class="metrica-valor">0</span>
+            </div>
+            <div class="tarjeta-metrica metrica-completado">
+                <span class="metrica-etiqueta">Completados</span>
+                <span id="metricaCompletados" class="metrica-valor">0</span>
+            </div>
+        </section>
+
+        <!-- Barra de Filtros Combinables -->
+        <section class="seccion-filtros">
+            <form id="formFiltros" class="barra-filtros">
+                <div class="grupo-filtro">
+                    <label for="filtroFecha">Fecha</label>
+                    <input type="date" id="filtroFecha" name="fecha">
+                </div>
+
+                <div class="grupo-filtro">
+                    <label for="filtroEmpleado">Profesional</label>
+                    <select id="filtroEmpleado" name="idEmpleado">
+                        <option value="">Todos los profesionales</option>
+                    </select>
+                </div>
+
+                <div class="grupo-filtro">
+                    <label for="filtroEstado">Estado del Turno</label>
+                    <select id="filtroEstado" name="estado">
+                        <option value="">Todos los estados</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En Atención">En Atención</option>
+                        <option value="Completado">Completado</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+
+                <div class="grupo-filtro-acciones">
+                    <button type="button" id="btnLimpiarFiltros" class="btn btn-secundario">
+                        Limpiar Filtros
+                    </button>
+                    <button type="button" id="btnRefrescar" class="btn btn-icono" title="Actualizar tablero">
+                        🔄
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Contenedor Principal de Tarjetas del Tablero -->
+        <section class="seccion-tablero">
+            <div class="seccion-cabecera-tablero">
+                <h2>Listado de Turnos</h2>
+                <span id="contadorResultados" class="subtexto-cabecera">Cargando turnos...</span>
+            </div>
+
+            <div id="contenedorTurnosTablero" class="grilla-tablero">
+                <p class="estado-vacio">Cargando turnos del tablero...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Contenedor de Alertas Toast Flotantes -->
+    <div id="toastMensaje" class="toast-flotante oculto" role="alert"></div>
+
+    <footer class="pie-pagina">
+        <p>Programación II · Trabajo Final Integrador · Ciclo 2026 · Tecnicatura Superior en Desarrollo de Software</p>
+    </footer>
+
+    <script type="module" src="js/tablero.js"></script>
+</body>
+</html>

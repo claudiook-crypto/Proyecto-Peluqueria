@@ -17,6 +17,10 @@ async function pedirJson(url, opciones = {}) {
     return datos;
 }
 
+// ------------------------------------------------------------
+// 1. Métodos de Catálogo y Reservas (Dueño: Maxi)
+// ------------------------------------------------------------
+
 // Catálogo de servicios disponibles
 export function obtenerServicios() {
     return pedirJson(`${API_URL}/turnos/servicios`);
@@ -35,5 +39,37 @@ export function guardarTurno(datosTurno) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(datosTurno)
+    });
+}
+
+// ------------------------------------------------------------
+// 2. Métodos del Tablero y Gestión (Dueño: Claudio)
+// ------------------------------------------------------------
+
+// Listado completo de turnos para el tablero operativo
+export function obtenerTurnosTablero() {
+    return pedirJson(`${API_URL}/tablero`);
+}
+
+// Búsqueda con filtros opcionales en el WHERE (fecha, barbero, estado)
+export function buscarTurnosTablero(filtros = {}) {
+    const params = new URLSearchParams();
+    if (filtros.fecha) params.append("fecha", filtros.fecha);
+    if (filtros.idEmpleado) params.append("idEmpleado", filtros.idEmpleado);
+    if (filtros.estado) params.append("estado", filtros.estado);
+
+    const queryString = params.toString();
+    const url = queryString ? `${API_URL}/tablero/buscar?${queryString}` : `${API_URL}/tablero`;
+    return pedirJson(url);
+}
+
+// Actualización de estado en la máquina de estados (PATCH)
+export function actualizarEstadoTurno(idTurno, nuevoEstado) {
+    return pedirJson(`${API_URL}/tablero/${idTurno}/estado`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nuevoEstado })
     });
 }
